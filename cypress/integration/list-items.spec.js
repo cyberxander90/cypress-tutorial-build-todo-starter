@@ -11,4 +11,9 @@ describe('List items', () => {
       .find('.toggle')
         .should('be.checked')
   })
+
+  it('show remaining todos in the footer', () => {
+    cy.get('.todo-count strong')
+      .should('have.text', '3')
+  })
 })
