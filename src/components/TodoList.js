@@ -7,11 +7,16 @@ const TodoItem = props =>
       <label>
         {props.name}
       </label>
-      <button className="destroy" />
+      <button 
+        className="destroy"
+        onClick={() => props.handleRemoveTodo(props.id)}
+      />
     </div>
   </li>
 
 export default props =>
   <ul className="todo-list">
-    {props.todos.map(todo => <TodoItem key={todo.id} {...todo}/>)}
+    {props.todos.map(todo => 
+      <TodoItem key={todo.id} {...todo}
+        handleRemoveTodo={props.handleRemoveTodo}/>)}
   </ul>
