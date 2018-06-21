@@ -17,12 +17,15 @@ describe('Input form', () => {
   })
 
   context('Form submission', () => {
-    it.only('Adds a new todo on submit', () => {
-      const typedText = 'Buy eggs'
+    beforeEach(() => {
       cy.server()
+    })
+
+    it('Adds a new todo on submit', () => {
+      const typedText = 'Buy eggs'
       cy.route('POST', '/api/todos', {
         name: typedText,
-        isComplte: false
+        isComplete: false
       })
 
       cy.get('.new-todo')
@@ -33,6 +36,26 @@ describe('Input form', () => {
       cy.get('.todo-list li')
         .should('have.length', 1)
         .and('contain', typedText)
+    })
+
+    it('Show an error message on a failed submission', () => {
+      cy.route({
+        url: '/api/todos',
+        method: 'POST',
+        response: {
+          error: 'Failed to save todo'
+        },
+        status: 500,
+      })
+
+      cy.get('.new-todo')
+        .type('test{enter}')
+
+      cy.get('.todo-list li')
+        .should('not.exist')
+
+      cy.get('.error')
+        .should('be.visible')
     })
   })
 })
