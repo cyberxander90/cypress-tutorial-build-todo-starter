@@ -21,6 +21,7 @@ export default class TodoApp extends Component {
   componentDidMount() {
     loadTodos()
       .then(({data}) => this.setState({todos: data}))
+      .catch(() => this.setState({ showError: true }));
   }
 
   handleNewTodoChange(evt) {
@@ -43,9 +44,7 @@ export default class TodoApp extends Component {
         });
       })
       .catch(() => {
-        this.setState({
-          showError: true
-        })
+        this.setState({ showError: true });
       })
   }
 
