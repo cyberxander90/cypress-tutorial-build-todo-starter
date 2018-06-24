@@ -17,7 +17,7 @@ describe('List items', () => {
       .should('have.text', '3')
   })
 
-  it.only('remove a todo', () => {
+  it('remove a todo', () => {
     cy.route({
       url: '/api/todos/1',
       method: 'DELETE',
@@ -40,5 +40,33 @@ describe('List items', () => {
       .first()
       .should('contain', 'Buy Eggs')
 
+  })
+
+  it.only('toggle a todo', () => {
+    cy.fixture("todos")
+      .then(todos => {
+        const firstTodo = Cypress._.head(todos)
+        cy.route({
+          url: `/api/todos/${firstTodo.id}`,
+          method: 'PUT',
+          response: Cypress._.merge(firstTodo, {isComplete: true})
+        })
+      })
+
+    cy.get('.todo-list li')
+      .first()
+      .as('first-todo')
+
+    cy.get('@first-todo')
+      .find('.toggle')
+      .click()
+      .should('be.checked')
+      
+
+    cy.get('@first-todo')
+      .should('have.class', 'completed')
+      
+    cy.get('.todo-count strong')
+      .should('have.text', '2')
   })
 })

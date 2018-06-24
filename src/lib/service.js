@@ -10,3 +10,6 @@ export const loadTodos = () =>
 
 export const removeTodo = (id) =>
   axios.delete(`${url}/${id}`)
+
+export const updateTodo = (todo) =>
+  axios.put(`${url}/${todo.id}`, todo)

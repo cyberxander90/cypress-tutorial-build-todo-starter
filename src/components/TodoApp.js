@@ -3,7 +3,7 @@ import {BrowserRouter as Router, Route} from 'react-router-dom'
 import TodoForm from './TodoForm'
 import TodoList from './TodoList'
 import Footer from './Footer'
-import {saveTodo, loadTodos, removeTodo} from './../lib/service'
+import {saveTodo, loadTodos, removeTodo, updateTodo} from './../lib/service'
 
 
 export default class TodoApp extends Component {
@@ -17,6 +17,7 @@ export default class TodoApp extends Component {
     this.handleNewTodoChange = this.handleNewTodoChange.bind(this);
     this.handleTodoSubmit = this.handleTodoSubmit.bind(this);
     this.handleRemoveTodo = this.handleRemoveTodo.bind(this);
+    this.handleToggleTodo = this.handleToggleTodo.bind(this);
   }
 
   componentDidMount() {
@@ -56,6 +57,22 @@ export default class TodoApp extends Component {
       }));
   }
 
+  handleToggleTodo(id) {
+    const targetTodo = this.state.todos.find(todo => todo.id === id);
+    const updatedTargetTodo = {
+      ...targetTodo,
+      isComplete: !targetTodo.isComplete
+    };
+
+    updateTodo(updatedTargetTodo)
+      .then(({data}) => {
+        // debugger
+        const index = this.state.todos.findIndex((todo => todo.id === data.id));
+        let newTodos = this.state.todos.map((todo) => todo.id == data.id ? data : todo);
+        this.setState({todos: newTodos});
+      })
+  }
+
   render () {
     const remaining = this.state.todos.filter((todo) => !todo.isComplete).length;
     return (
@@ -74,6 +91,7 @@ export default class TodoApp extends Component {
             <TodoList
               todos={this.state.todos}
               handleRemoveTodo={this.handleRemoveTodo}
+              handleToggleTodo={this.handleToggleTodo}
             />
           </section>
           <Footer remaining={remaining}/>
