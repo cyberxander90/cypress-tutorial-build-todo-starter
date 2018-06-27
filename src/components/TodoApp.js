@@ -39,16 +39,19 @@ export default class TodoApp extends Component {
       name: this.state.currentTodo,
       isComplete: false
     };
-    saveTodo(newTodo)
-      .then(({data}) => {
-        this.setState({
-          todos: this.state.todos.concat(data),
-          currentTodo: ''
-        });
-      })
-      .catch(() => {
-        this.setState({ showError: true });
-      })
+    
+    setTimeout(() => {
+      saveTodo(newTodo)
+        .then(({data}) => {
+          this.setState({
+            todos: this.state.todos.concat(data),
+            currentTodo: ''
+          });
+        })
+        .catch(() => {
+          this.setState({ showError: true });
+        })
+    }, 5000)
   }
 
   handleRemoveTodo(id) {
