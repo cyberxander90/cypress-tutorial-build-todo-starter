@@ -17,20 +17,20 @@ describe('Footer', () => {
         .should('contain', '3 todos left')
     })
 
-    it('Filter to active todos', () => {
-      cy.contains('Active')
-        .click()
+    it('Handle active/complete/all filtes', () => {
+      const filters = [
+        {link: 'Active', requiredLength: 3},
+        {link: 'Completed', requiredLength: 1},
+        {link: 'All', requiredLength: 4}
+      ]
+      cy.wrap(filters)
+        .each((filter) => {
+          cy.contains(filter.link)
+            .click()
 
-      cy.get('.todo-list li')
-        .should('have.length', 3)
-    })
-
-    it.only('Filter to completed todos', () => {
-      cy.contains('Completed')
-        .click()
-
-      cy.get('.todo-list li')
-        .should('have.length', 1)
+          cy.get('.todo-list li')
+            .should('have.length', filter.requiredLength)
+        })
     })
   })
 })
